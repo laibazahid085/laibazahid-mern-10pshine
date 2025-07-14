@@ -1,4 +1,4 @@
-/* .notes-container {
+.notes-container {
   padding: 2rem;
   max-width: 1000px;
   margin: auto;
@@ -44,4 +44,37 @@
 .create-btn {
   padding: 12px 20px;
   font-size: 16px;
-} */
+}
+
+textarea.input-field {
+  resize: vertical;
+  font-family: inherit;
+  font-size: 1rem;
+  padding: 0.85rem;
+}
+@media (max-width: 600px) {
+  .notes-container {
+    padding: 1rem;
+  }
+
+  .notes-title {
+    font-size: 22px;
+  }
+
+  .create-btn {
+    width: 100%;
+    font-size: 15px;
+  }
+
+  .note-card {
+    padding: 0.75rem;
+  }
+
+  .note-card h3 {
+    font-size: 1rem;
+  }
+
+  .note-card p {
+    font-size: 0.9rem;
+  }
+}

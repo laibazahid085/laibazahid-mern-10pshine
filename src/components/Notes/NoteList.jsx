@@ -1,36 +1,62 @@
-// import "./Notes.css";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import NoteCard from "./NoteCard";
+import { fetchNotes } from "../../services/noteService";
+import "./Notes.css";
 
-// const dummyNotes = [
-//   {
-//     id: 1,
-//     title: "Meeting Notes",
-//     content: "Discuss project scope and timeline.",
-//     date: "2025-07-12",
-//   },
-//   {
-//     id: 2,
-//     title: "Shopping List",
-//     content: "Milk, Bread, Eggs, Butter",
-//     date: "2025-07-10",
-//   },
-// ];
+const NoteList = () => {
+  const [notes, setNotes] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
 
-// const NoteList = () => {
-//   return (
-//     <div className="notes-container">
-//       <h2 className="notes-title">📝 Your Notes</h2>
-//       <div className="notes-grid">
-//         {dummyNotes.map((note) => (
-//           <div className="note-card" key={note.id}>
-//             <h3>{note.title}</h3>
-//             <p>{note.content}</p>
-//             <span className="note-date">{note.date}</span>
-//           </div>
-//         ))}
-//       </div>
-//       <button className="primary-btn create-btn">+ Create New Note</button>
-//     </div>
-//   );
-// };
+  useEffect(() => {
+    const getNotes = async () => {
+      try {
+        const res = await fetchNotes();         // real API call
+        setNotes(res.data);                     // assumes backend returns an array
+      } catch (err) {
+        setError(err.response?.data?.message || "Could not load notes");
+      } finally {
+        setLoading(false);
+      }
+    };
+    getNotes();
+  }, []);
 
-// export default NoteList;
+  if (loading) return <p style={{ textAlign: "center" }}>Loading notes…</p>;
+  if (error)   return <p className="error" style={{ textAlign: "center" }}>{error}</p>;
+  if (!notes.length) return (
+    <div className="notes-container">
+      <h2 className="notes-title">📝 Your Notes</h2>
+      <p>No notes yet. Click the button below to create one!</p>
+      <button
+        className="primary-btn create-btn"
+        onClick={() => navigate("/note/new")}
+      >
+        + Create New Note
+      </button>
+    </div>
+  );
+
+  return (
+    <div className="notes-container">
+      <h2 className="notes-title">📝 Your Notes</h2>
+
+      <div className="notes-grid">
+        {notes.map((note) => (
+          <NoteCard key={note._id} note={note} />
+        ))}
+      </div>
+
+      <button
+        className="primary-btn create-btn"
+        onClick={() => navigate("/note/new")}
+      >
+        + Create New Note
+      </button>
+    </div>
+  );
+};
+
+export default NoteList;

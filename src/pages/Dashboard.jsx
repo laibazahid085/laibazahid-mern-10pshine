@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import NoteList from "../Notes/NoteList"; // 🧠 Make sure path is correct
 import "./Dashboard.css";
 
 const Dashboard = () => {
@@ -11,10 +12,13 @@ const Dashboard = () => {
 
   return (
     <div className="dashboard-container">
-      <h1 className="dashboard-title">Welcome to Dashboard 🚀</h1>
-      <button onClick={handleLogout} className="primary-btn">
-        Logout
-      </button>
+      <div className="dashboard-header">
+        <h1 className="dashboard-title">Welcome to Dashboard 🚀</h1>
+        <button onClick={handleLogout} className="primary-btn">
+          Logout
+        </button>
+      </div>
+   <NoteList />
     </div>
   );
 };
