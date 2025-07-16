@@ -3,7 +3,7 @@ import Login from "./components/Auth/Login";
 import Signup from "./components/Auth/Signup";
 import Dashboard from "./pages/Dashboard";
 import PrivateRoute from "./components/Shared/PrivateRoute";
-
+import NoteEditor from "./components/Notes/NoteEditor";
 function App() {
   return (
     <Router>
@@ -15,6 +15,22 @@ function App() {
           element={
             <PrivateRoute>
               <Dashboard />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/note/new"
+          element={
+            <PrivateRoute>
+              <NoteEditor />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/note/:id"
+          element={
+            <PrivateRoute>
+              <NoteEditor />
             </PrivateRoute>
           }
         />

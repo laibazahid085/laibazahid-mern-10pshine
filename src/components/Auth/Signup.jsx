@@ -66,7 +66,9 @@ const Signup = () => {
           onChange={(e) => setConfirm(e.target.value)}
         />
 
-        <button type="submit" className="primary-btn">Sign Up</button>
+        <button type="submit" className="primary-btn">
+          Sign Up
+        </button>
 
         <p className="footer-text">
           Already have an account? <Link to="/">Login</Link>
