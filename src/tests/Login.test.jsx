@@ -1,4 +1,3 @@
-// src/__tests__/Login.test.jsx
 import { render, screen } from "@testing-library/react";
 import Login from "../components/Auth/Login";
 import { BrowserRouter } from "react-router-dom";
