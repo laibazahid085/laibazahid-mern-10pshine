@@ -4,6 +4,7 @@ import Signup from "./components/Auth/Signup";
 import Dashboard from "./pages/Dashboard";
 import PrivateRoute from "./components/Shared/PrivateRoute";
 import NoteEditor from "./components/Notes/NoteEditor";
+import Profile from "./pages/Profile";
 function App() {
   return (
     <Router>
@@ -31,6 +32,14 @@ function App() {
           element={
             <PrivateRoute>
               <NoteEditor />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <PrivateRoute>
+              <Profile />
             </PrivateRoute>
           }
         />

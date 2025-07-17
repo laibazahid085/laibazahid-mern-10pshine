@@ -78,3 +78,8 @@ textarea.input-field {
     font-size: 0.9rem;
   }
 }
+.rich-editor {
+  background-color: #fff;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+}

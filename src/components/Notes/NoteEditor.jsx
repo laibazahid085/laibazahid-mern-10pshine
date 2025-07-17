@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 import {
   createNote,
   getNoteById,
@@ -77,12 +79,11 @@ const NoteEditor = () => {
             onChange={(e) => setTitle(e.target.value)}
           />
 
-          <textarea
-            rows="10"
-            placeholder="Write your note here..."
-            className="input-field"
+          <ReactQuill
+            theme="snow"
             value={content}
-            onChange={(e) => setContent(e.target.value)}
+            onChange={setContent}
+            className="rich-editor"
           />
 
           <div
