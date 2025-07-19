@@ -1,0 +1,15 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 24px;
+  background-color: #0d6efd;
+  color: white;
+}
+
+.search-input {
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: none;
+  width: 220px;
+}
