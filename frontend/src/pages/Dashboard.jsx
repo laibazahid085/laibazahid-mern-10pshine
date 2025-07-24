@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import NoteList from "../Notes/NoteList";
-import NoteEditor from "../Notes/NoteEditor";
-import Navbar from "../Shared/Navbar"; // ✅ Import shared navbar
-import { getNotes } from "../../services/noteService";
+import NoteList from "../components/Notes/NoteList";
+import NoteEditor from "../components/Notes/NoteEditor";
+import Navbar from "../components/Shared/Navbar"; // ✅ Import shared navbar
+import { getNotes } from "../services/noteService";
 import "./Dashboard.css";
 
 const Dashboard = () => {

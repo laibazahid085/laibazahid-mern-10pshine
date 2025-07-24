@@ -14,7 +14,7 @@ const Signup = () => {
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-    setError(""); // clear error on typing
+    setError("");
   };
 
   const handleSubmit = async (e) => {
@@ -31,16 +31,19 @@ const Signup = () => {
   };
 
   return (
-    <div className="auth-container">
-      <h2>Signup</h2>
-      {error && <p className="error-msg">{error}</p>}
-      <form onSubmit={handleSubmit}>
+    <div className="auth-container royal-theme">
+      <form className="auth-form" onSubmit={handleSubmit}>
+        <h2 className="form-title">Signup</h2>
+
+        {error && <p className="error">{error}</p>}
+
         <input
           type="text"
           name="name"
           placeholder="Name"
           value={formData.name}
           onChange={handleChange}
+          className="input-field"
           required
         />
 
@@ -50,6 +53,7 @@ const Signup = () => {
           placeholder="Email"
           value={formData.email}
           onChange={handleChange}
+          className="input-field"
           required
         />
 
@@ -59,10 +63,16 @@ const Signup = () => {
           placeholder="Password"
           value={formData.password}
           onChange={handleChange}
+          className="input-field"
           required
         />
 
-        <button type="submit" className="primary-btn">Signup</button>
+        <button type="submit" className="primary-btn">
+          Signup
+        </button>
+        <p className="footer-text">
+          Already have an account? <a onClick={() => navigate("/")}>Login</a>
+        </p>
       </form>
     </div>
   );

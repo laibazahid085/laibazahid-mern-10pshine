@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import "./NoteList.css";
+import "./Notes.css";
 
 const NoteList = () => {
   const [notes, setNotes] = useState([]);

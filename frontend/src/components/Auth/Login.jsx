@@ -10,33 +10,33 @@ const Login = () => {
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-    setError(""); // Clear error on input
+    setError("");
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
       await loginUser(formData);
       navigate("/dashboard");
     } catch (err) {
-      setError(
-        err.response?.data?.message || "Login failed. Please try again."
-      );
+      setError(err.response?.data?.message || "Login failed. Please try again.");
     }
   };
 
   return (
-    <div className="auth-container">
-      <h2>Login</h2>
-      {error && <p className="error-msg">{error}</p>}
-      <form onSubmit={handleSubmit}>
+    <div className="auth-container royal-theme">
+      <form className="auth-form" onSubmit={handleSubmit}>
+        <h2 className="form-title">Login</h2>
+
+        {error && <p className="error">{error}</p>}
+
         <input
           type="email"
           name="email"
           placeholder="Email"
           value={formData.email}
           onChange={handleChange}
+          className="input-field"
           required
         />
 
@@ -46,10 +46,15 @@ const Login = () => {
           placeholder="Password"
           value={formData.password}
           onChange={handleChange}
+          className="input-field"
           required
         />
 
         <button type="submit" className="primary-btn">Login</button>
+      <p className="footer-text">
+  Don't have an account? <a onClick={() => navigate("/signup")}>Signup</a>
+</p>
+
       </form>
     </div>
   );

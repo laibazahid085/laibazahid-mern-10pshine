@@ -4,7 +4,7 @@ import Signup from "./components/Auth/Signup";
 import Dashboard from "./pages/Dashboard";
 import PrivateRoute from "./components/Shared/PrivateRoute";
 import NoteEditor from "./components/Notes/NoteEditor";
-import Profile from "./pages/Profile";
+import Profile from "./components/Profile/UserProfile";
 function App() {
   return (
     <Router>
