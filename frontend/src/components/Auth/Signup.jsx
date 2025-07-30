@@ -20,8 +20,24 @@ const Signup = () => {
     setError("");
   };
 
+  // ✅ Strong password validator function
+  const isStrongPassword = (password) => {
+    const regex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+    return regex.test(password);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // ✅ Frontend validation
+    if (!isStrongPassword(formData.password)) {
+      setError(
+        "Password must be at least 8 characters and include uppercase, lowercase, number, and special character."
+      );
+      return;
+    }
+
     try {
       await signupUser(formData);
       toast.success("Signup successful! Please log in.", {
@@ -29,7 +45,7 @@ const Signup = () => {
         autoClose: 3000,
       });
       localStorage.setItem("newlySignedUpUser", formData.name);
-navigate("/");
+      navigate("/");
     } catch (err) {
       setError(
         err.response?.data?.message || "Signup failed. Please try again."

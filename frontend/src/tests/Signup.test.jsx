@@ -1,14 +1,13 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
-import Signup from "../pages/Auth/Signup"; // Adjust path as needed
+import Signup from "../pages/Auth/Signup"; // Path as per your structure
 import * as authService from "../../services/authService";
 
-// Mock signupUser function from authService
+// 🧪 Mocks
 jest.mock("../../services/authService", () => ({
   signupUser: jest.fn(),
 }));
 
-// Mock toast to avoid actual toast rendering in tests
 jest.mock("react-toastify", () => ({
   toast: {
     success: jest.fn(),
@@ -16,12 +15,16 @@ jest.mock("react-toastify", () => ({
 }));
 
 describe("Signup Component", () => {
-  test("renders signup form with inputs and button", () => {
+  const setup = () => {
     render(
       <BrowserRouter>
         <Signup />
       </BrowserRouter>
     );
+  };
+
+  test("renders signup form inputs and button", () => {
+    setup();
 
     expect(screen.getByText(/signup/i)).toBeInTheDocument();
     expect(screen.getByPlaceholderText(/name/i)).toBeInTheDocument();
@@ -30,14 +33,30 @@ describe("Signup Component", () => {
     expect(screen.getByRole("button", { name: /signup/i })).toBeInTheDocument();
   });
 
-  test("calls signupUser and shows success toast on successful signup", async () => {
+  test("displays error for weak password", async () => {
+    setup();
+
+    fireEvent.change(screen.getByPlaceholderText(/name/i), {
+      target: { name: "name", value: "Weak Tester" },
+    });
+    fireEvent.change(screen.getByPlaceholderText(/email/i), {
+      target: { name: "email", value: "weak@test.com" },
+    });
+    fireEvent.change(screen.getByPlaceholderText(/password/i), {
+      target: { name: "password", value: "123" }, // Weak password
+    });
+
+    fireEvent.click(screen.getByRole("button", { name: /signup/i }));
+
+    const errorMsg = await screen.findByText(/password must be at least 8 characters/i);
+    expect(errorMsg).toBeInTheDocument();
+    expect(authService.signupUser).not.toHaveBeenCalled(); // ❌ Should not call API
+  });
+
+  test("calls signupUser and shows toast on successful signup", async () => {
     authService.signupUser.mockResolvedValueOnce({});
 
-    render(
-      <BrowserRouter>
-        <Signup />
-      </BrowserRouter>
-    );
+    setup();
 
     fireEvent.change(screen.getByPlaceholderText(/name/i), {
       target: { name: "name", value: "Test User" },
@@ -46,7 +65,7 @@ describe("Signup Component", () => {
       target: { name: "email", value: "test@example.com" },
     });
     fireEvent.change(screen.getByPlaceholderText(/password/i), {
-      target: { name: "password", value: "password123" },
+      target: { name: "password", value: "StrongPass1!" }, // Strong password
     });
 
     fireEvent.click(screen.getByRole("button", { name: /signup/i }));
@@ -55,27 +74,24 @@ describe("Signup Component", () => {
       expect(authService.signupUser).toHaveBeenCalledWith({
         name: "Test User",
         email: "test@example.com",
-        password: "password123",
+        password: "StrongPass1!",
       });
     });
 
     expect(localStorage.getItem("newlySignedUpUser")).toBe("Test User");
+
     expect(require("react-toastify").toast.success).toHaveBeenCalledWith(
       "Signup successful! Please log in.",
       expect.any(Object)
     );
   });
 
-  test("displays error message on signup failure", async () => {
+  test("displays error message on API failure", async () => {
     authService.signupUser.mockRejectedValueOnce({
       response: { data: { message: "Email already in use" } },
     });
 
-    render(
-      <BrowserRouter>
-        <Signup />
-      </BrowserRouter>
-    );
+    setup();
 
     fireEvent.change(screen.getByPlaceholderText(/name/i), {
       target: { name: "name", value: "Test User" },
@@ -84,7 +100,7 @@ describe("Signup Component", () => {
       target: { name: "email", value: "test@example.com" },
     });
     fireEvent.change(screen.getByPlaceholderText(/password/i), {
-      target: { name: "password", value: "password123" },
+      target: { name: "password", value: "StrongPass1!" },
     });
 
     fireEvent.click(screen.getByRole("button", { name: /signup/i }));
