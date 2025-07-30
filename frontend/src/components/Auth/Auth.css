@@ -21,13 +21,15 @@ body {
   color: var(--royal-blue);
 }
 
+/* ===========================
+   🔐 AUTH FORM CONTAINER
+=========================== */
 .auth-container.royal-theme {
   min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 2rem;
-  background: linear-gradient(135deg, var(--royal-blue), var(--dark-blue));
 }
 
 .auth-form {
@@ -55,6 +57,9 @@ body {
   color: var(--dark-blue);
 }
 
+/* ===========================
+   🧾 INPUT FIELDS
+=========================== */
 .input-field {
   padding: 0.85rem;
   font-size: 1rem;
@@ -70,8 +75,12 @@ body {
   outline: none;
 }
 
-.primary-btn {
+/* ===========================
+   🔘 BUTTONS
+=========================== */
+.primary-btnn {
   background-color: var(--dark-blue);
+  width: 100%;
   color: var(--white);
   padding: 0.85rem;
   font-size: 1rem;
@@ -82,16 +91,19 @@ body {
   transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-.primary-btn:hover {
+.primary-btnn:hover {
   background-color: #24357c;
   transform: scale(1.02);
 }
 
-.primary-btn:focus {
+.primary-btnn:focus {
   outline: none;
   box-shadow: 0 0 0 3px rgba(36, 53, 124, 0.3);
 }
 
+/* ===========================
+   ⚠️ ERROR / LINKS / FOOTER
+=========================== */
 .error {
   color: var(--error-red);
   font-size: 0.9rem;
@@ -116,7 +128,15 @@ body {
   cursor: pointer;
 }
 
-/* 🌐 Responsive */
+.link {
+  color: var(--dark-blue);
+  cursor: pointer;
+  font-weight: bold;
+}
+
+/* ===========================
+   📱 RESPONSIVE
+=========================== */
 @media (max-width: 480px) {
   .auth-form {
     padding: 2rem 1.2rem;
@@ -127,7 +147,8 @@ body {
     font-size: 1.5rem;
   }
 
-  .primary-btn {
+  .primary-btnn {
     padding: 0.75rem;
+    font-size: 0.95rem;
   }
 }

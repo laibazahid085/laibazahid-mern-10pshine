@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:5000/api/auth"; // Update if your backend uses a different path
+// ✅ FIXED: Correct base URL
+const API_URL = "http://localhost:5000/api/users";
 
 // LOGIN
 export const loginUser = async (credentials) => {
@@ -18,7 +19,6 @@ export const loginUser = async (credentials) => {
 export const signupUser = async (userData) => {
   const response = await axios.post(`${API_URL}/signup`, userData);
 
-  // Save token if backend returns one
   if (response.data.token) {
     localStorage.setItem("token", response.data.token);
   }
@@ -26,7 +26,7 @@ export const signupUser = async (userData) => {
   return response.data;
 };
 
-// LOGOUT (optional)
+// LOGOUT
 export const logoutUser = () => {
   localStorage.removeItem("token");
 };

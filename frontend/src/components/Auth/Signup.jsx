@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { signupUser } from "../../services/authService";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "./Auth.css";
 
 const Signup = () => {
@@ -9,6 +11,7 @@ const Signup = () => {
     email: "",
     password: "",
   });
+
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
@@ -19,10 +22,14 @@ const Signup = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
       await signupUser(formData);
-      navigate("/dashboard");
+      toast.success("Signup successful! Please log in.", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+      localStorage.setItem("newlySignedUpUser", formData.name);
+navigate("/");
     } catch (err) {
       setError(
         err.response?.data?.message || "Signup failed. Please try again."
@@ -67,11 +74,15 @@ const Signup = () => {
           required
         />
 
-        <button type="submit" className="primary-btn">
+        <button type="submit" className="primary-btnn">
           Signup
         </button>
+
         <p className="footer-text">
-          Already have an account? <a onClick={() => navigate("/")}>Login</a>
+          Already have an account?{" "}
+          <span className="link" onClick={() => navigate("/")}>
+            Login
+          </span>
         </p>
       </form>
     </div>

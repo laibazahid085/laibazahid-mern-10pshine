@@ -1,12 +1,20 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { loginUser } from "../../services/authService";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "./Auth.css";
 
 const Login = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    // 👇 If user comes from signup page, you can show something here if needed
+    // (not showing toast here anymore; it's now on dashboard)
+  }, [location]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -16,7 +24,13 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await loginUser(formData);
+      await loginUser(formData); // token should be stored in authService
+
+      // ✅ Save user name to sessionStorage if coming from signup
+      if (location.state?.fromSignup && location.state.userName) {
+        sessionStorage.setItem("newlySignedUpUser", location.state.userName);
+      }
+
       navigate("/dashboard");
     } catch (err) {
       setError(err.response?.data?.message || "Login failed. Please try again.");
@@ -50,11 +64,12 @@ const Login = () => {
           required
         />
 
-        <button type="submit" className="primary-btn">Login</button>
-      <p className="footer-text">
-  Don't have an account? <a onClick={() => navigate("/signup")}>Signup</a>
-</p>
+        <button type="submit" className="primary-btnn">Login</button>
 
+        <p className="footer-text">
+          Don't have an account?{" "}
+          <span className="link" onClick={() => navigate("/signup")}>Signup</span>
+        </p>
       </form>
     </div>
   );
