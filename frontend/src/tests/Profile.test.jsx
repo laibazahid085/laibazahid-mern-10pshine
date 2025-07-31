@@ -87,7 +87,7 @@ describe("Profile Component", () => {
         <Profile />
       </BrowserRouter>
     );
-
+//work
     waitFor(async () => {
       await screen.findByText(/test user/i);
       const logoutBtn = screen.getByRole("button", { name: /logout/i });
