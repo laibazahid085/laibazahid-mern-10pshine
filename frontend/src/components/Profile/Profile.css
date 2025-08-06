@@ -18,7 +18,7 @@ body {
 /* 🧍 Profile Container */
 .profile-container {
   max-width: 500px;
-  margin: 60px auto;
+  margin: 90px auto;
   padding: 20px;
   border-radius: 16px;
   background-color: var(--light-grey);
@@ -84,7 +84,7 @@ body {
 /* 📱 Responsive */
 @media (max-width: 768px) {
   .profile-container {
-    margin: 40px 20px;
+    margin: 100px;
     padding: 16px;
   }
 

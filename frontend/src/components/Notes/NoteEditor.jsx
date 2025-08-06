@@ -13,6 +13,9 @@ const NoteEditor = ({ selectedNote, onSave, onDelete }) => {
   const [loading, setLoading] = useState(false);
   const quillRef = useRef(null);
 
+  const maxContentChars = 1500;
+  const maxTitleChars = 30;
+
   useEffect(() => {
     if (selectedNote) {
       setTitle(selectedNote.title);
@@ -22,6 +25,26 @@ const NoteEditor = ({ selectedNote, onSave, onDelete }) => {
       setContent("");
     }
   }, [selectedNote]);
+
+  const getCharCount = () => {
+    const text = quillRef.current?.getEditor().getText() || "";
+    return text.trim().length;
+  };
+
+  const handleContentChange = (value) => {
+    const editor = quillRef.current?.getEditor();
+    const plainText = editor?.getText() || "";
+    const charCount = plainText.trim().length;
+
+    if (charCount <= maxContentChars) {
+      setContent(value);
+    } else {
+      toast.warning(`Character limit of ${maxContentChars} reached.`);
+      const trimmedText = plainText.trim().slice(0, maxContentChars);
+      editor.setText(trimmedText + " ");
+      setContent(editor.root.innerHTML);
+    }
+  };
 
   const handleSave = async () => {
     if (!title.trim() || !content.trim()) {
@@ -83,25 +106,23 @@ const NoteEditor = ({ selectedNote, onSave, onDelete }) => {
         placeholder="Note title"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
+        maxLength={maxTitleChars}
         disabled={loading}
       />
+      <p className="char-count">{title.length} / {maxTitleChars}</p>
 
       <ReactQuill
         ref={quillRef}
         className="quill-editor"
         theme="snow"
         value={content}
-        onChange={setContent}
+        onChange={handleContentChange}
         readOnly={loading}
         placeholder="Write your note here..."
       />
-
+      <p className="char-count">{getCharCount()} / {maxContentChars}</p>
       <div className="editor-buttons">
-        <button
-          className="primary-btn"
-          onClick={handleSave}
-          disabled={loading}
-        >
+        <button className="primary-btn" onClick={handleSave} disabled={loading}>
           {selectedNote ? "Update" : "Save"}
         </button>
 
@@ -115,11 +136,7 @@ const NoteEditor = ({ selectedNote, onSave, onDelete }) => {
           </button>
         )}
 
-        <button
-          className="clear-btn"
-          onClick={handleClear}
-          disabled={loading}
-        >
+        <button className="clear-btn" onClick={handleClear} disabled={loading}>
           Clear
         </button>
       </div>

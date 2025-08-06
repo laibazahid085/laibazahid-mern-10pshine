@@ -1,5 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { confirmAlert } from "react-confirm-alert";
+import "react-confirm-alert/src/react-confirm-alert.css";
 import "./Navbar.css";
 
 const Navbar = ({
@@ -31,8 +33,23 @@ const Navbar = ({
   );
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    navigate("/");
+    confirmAlert({
+      title: "Logout Confirmation",
+      message: "Are you sure you want to logout?",
+      buttons: [
+        {
+          label: "Yes",
+          onClick: () => {
+            localStorage.removeItem("token");
+            navigate("/");
+          },
+        },
+        {
+          label: "No",
+          onClick: () => {},
+        },
+      ],
+    });
   };
 
   const handleNoteClick = (note) => {
@@ -59,11 +76,11 @@ const Navbar = ({
       </div>
 
       <div className="navbar-right">
-        {/* 🔁 Search bar — will be hidden on mobile when menuOpen is true */}
+        {/* 🔁 Search bar */}
         <div className="navbar-search-container">
           <input
             type="text"
-            className="navbar-search"
+            className="navbar-search search-input"
             placeholder="Search notes..."
             value={localSearch}
             onFocus={() => setShowDropdown(true)}
@@ -89,14 +106,14 @@ const Navbar = ({
           )}
         </div>
 
-        {/* 🔁 Action buttons (toggle visibility on mobile) */}
+        {/* 🔁 Action buttons */}
         <div className={`navbar-actions ${menuOpen ? "open" : ""}`}>
-          <button onClick={handleShowAllNotes}> Notes</button>
+          <button onClick={handleShowAllNotes}>Notes</button>
           <button onClick={() => navigate("/profile")}>Profile</button>
           <button onClick={handleLogout}>Logout</button>
         </div>
 
-        {/* 🔁 Toggle menu icon — always on right */}
+        {/* 🔁 Toggle menu icon */}
         <div className="menu-toggle" onClick={() => setMenuOpen(!menuOpen)}>
           {menuOpen ? "⨯" : "☰"}
         </div>
