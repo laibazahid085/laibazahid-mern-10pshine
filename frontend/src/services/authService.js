@@ -1,42 +1,64 @@
 // src/services/authService.js
+
 import axios from "axios";
 
-// ✅ Base URL for user-related endpoints
-const API_URL = "http://localhost:5000/api/users";
+// ✅ Create an Axios instance for auth-related requests
+const API = axios.create({
+  baseURL: "http://localhost:5000/api/users", // Make sure this matches your backend
+});
 
-// ✅ LOGIN: POST /api/users/login
+// ✅ Login user → POST /api/users/login
 export const loginUser = async (credentials) => {
   try {
-    const response = await axios.post(`${API_URL}/login`, credentials);
+    const res = await API.post("/login", credentials);
 
-    // ✅ Save token if present
-    if (response.data.token) {
-      localStorage.setItem("token", response.data.token);
+    if (res.data.token) {
+      localStorage.setItem("token", res.data.token);
     }
 
-    return response.data; // Return user data
+    return res.data;
   } catch (error) {
-    // ❌ Forward error to UI (e.g., Login.jsx)
-    throw error;
+    throw error.response?.data || error; // return meaningful error to frontend
   }
 };
 
-// ✅ SIGNUP: POST /api/users/signup
+// ✅ Signup user → POST /api/users/signup
 export const signupUser = async (userData) => {
   try {
-    const response = await axios.post(`${API_URL}/signup`, userData);
+    const res = await API.post("/signup", userData);
 
-    if (response.data.token) {
-      localStorage.setItem("token", response.data.token);
+    if (res.data.token) {
+      localStorage.setItem("token", res.data.token);
     }
 
-    return response.data;
+    return res.data;
   } catch (error) {
-    throw error;
+    throw error.response?.data || error;
   }
 };
 
-// ✅ LOGOUT
+// ✅ Get user profile → GET /api/users/profile
+export const getProfile = async () => {
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    throw new Error("No token found. Please login again.");
+  }
+
+  try {
+    const res = await API.get("/profile", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return res.data;
+  } catch (error) {
+    throw error.response?.data || error;
+  }
+};
+
+// ✅ Logout user (client-side only)
 export const logoutUser = () => {
   localStorage.removeItem("token");
 };

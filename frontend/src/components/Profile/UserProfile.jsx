@@ -19,7 +19,8 @@ const Profile = () => {
         },
       });
 
-      setUser(res.data.user);
+      // ✅ Fix: no need to access res.data.user if res.data itself is the user
+      setUser(res.data);
     } catch (err) {
       console.error("Profile fetch failed", err);
       alert("Could not load profile. Please login again.");
