@@ -1,32 +1,42 @@
+// src/services/authService.js
 import axios from "axios";
 
-// ✅ FIXED: Correct base URL
+// ✅ Base URL for user-related endpoints
 const API_URL = "http://localhost:5000/api/users";
 
-// LOGIN
+// ✅ LOGIN: POST /api/users/login
 export const loginUser = async (credentials) => {
-  const response = await axios.post(`${API_URL}/login`, credentials);
+  try {
+    const response = await axios.post(`${API_URL}/login`, credentials);
 
-  // Save token to localStorage
-  if (response.data.token) {
-    localStorage.setItem("token", response.data.token);
+    // ✅ Save token if present
+    if (response.data.token) {
+      localStorage.setItem("token", response.data.token);
+    }
+
+    return response.data; // Return user data
+  } catch (error) {
+    // ❌ Forward error to UI (e.g., Login.jsx)
+    throw error;
   }
-
-  return response.data;
 };
 
-// SIGNUP
+// ✅ SIGNUP: POST /api/users/signup
 export const signupUser = async (userData) => {
-  const response = await axios.post(`${API_URL}/signup`, userData);
+  try {
+    const response = await axios.post(`${API_URL}/signup`, userData);
 
-  if (response.data.token) {
-    localStorage.setItem("token", response.data.token);
+    if (response.data.token) {
+      localStorage.setItem("token", response.data.token);
+    }
+
+    return response.data;
+  } catch (error) {
+    throw error;
   }
-
-  return response.data;
 };
 
-// LOGOUT
+// ✅ LOGOUT
 export const logoutUser = () => {
   localStorage.removeItem("token");
 };

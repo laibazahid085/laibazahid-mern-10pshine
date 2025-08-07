@@ -13,18 +13,22 @@ body {
   font-family: "Segoe UI", "Roboto", sans-serif;
   background-color: var(--light-grey);
   color: var(--royal-blue);
+  margin: 0;
+  padding: 0;
 }
 
 /* 🧍 Profile Container */
 .profile-container {
   max-width: 500px;
-  margin: 90px auto;
+  margin: 80px auto;
   padding: 20px;
   border-radius: 16px;
-  background-color: var(--light-grey);
-  box-shadow: 0 0 20px var(--shadow-color);
-  transition: all 0.3s ease;
+  background-color: transparent; 
+  box-shadow: none; 
+  display: flex;
+  justify-content: center;
 }
+
 
 /* 📄 Profile Card */
 .profile-card {
@@ -35,9 +39,12 @@ body {
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  box-shadow: 0 8px 24px var(--shadow-color);
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 8px 24px var(--shadow-color); /* ✔️ keep this */
   transition: transform 0.3s ease;
 }
+
 
 .profile-card:hover {
   transform: translateY(-2px);
@@ -48,6 +55,7 @@ body {
   font-weight: bold;
   margin-bottom: 0.5rem;
   color: var(--dark-blue);
+  text-align: center;
 }
 
 .profile-card p {
@@ -55,11 +63,11 @@ body {
   color: var(--text-grey);
   margin: 0;
   word-break: break-word;
+  text-align: center;
 }
 
 /* 🔘 Button */
 .primary-btn {
-  align-self: flex-start;
   margin-top: 10px;
   padding: 0.85rem 1.5rem;
   background: var(--dark-blue);
@@ -70,7 +78,7 @@ body {
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
 }
-/* new */
+
 .primary-btn:hover {
   background-color: #24357c;
   transform: scale(1.02);
@@ -84,27 +92,26 @@ body {
 /* 📱 Responsive */
 @media (max-width: 768px) {
   .profile-container {
-    margin: 100px;
-    padding: 16px;
+    margin: 60px 16px;
+    padding: 0;
   }
 
   .profile-card {
-    padding: 2rem 1.2rem;
-  }
-
-  .primary-btn {
-    width: 100%;
-    text-align: center;
+    padding: 2rem 1.5rem;
   }
 }
 
 @media (max-width: 400px) {
+  .profile-card h2 {
+    font-size: 1.5rem;
+  }
+
   .profile-card p {
-    font-size: 0.9rem;
+    font-size: 0.95rem;
   }
 
   .primary-btn {
+    font-size: 0.95rem;
     padding: 0.75rem 1rem;
-    font-size: 0.9rem;
   }
 }

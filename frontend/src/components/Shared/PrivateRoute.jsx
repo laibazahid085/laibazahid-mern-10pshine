@@ -1,14 +1,20 @@
 import { Navigate } from "react-router-dom";
-import { jwtDecode } from "jwt-decode"; // ✅ correct
+import { jwtDecode } from "jwt-decode";
 
 const PrivateRoute = ({ children }) => {
   const token = localStorage.getItem("token");
 
-  if (!token) return <Navigate to="/" />;
+  if (!token) {
+    console.log("❌ No token found");
+    return <Navigate to="/" />;
+  }
 
   try {
-    const decoded = jwt_decode(token);
-    const isExpired = decoded.exp * 1000 < Date.now(); // JWT expiry is in seconds
+    const decoded = jwtDecode(token);
+    const isExpired = decoded.exp * 1000 < Date.now();
+
+    console.log("✅ JWT decoded:", decoded);
+    console.log("⏰ Token expired:", isExpired);
 
     if (isExpired) {
       localStorage.removeItem("token");
@@ -17,6 +23,7 @@ const PrivateRoute = ({ children }) => {
 
     return children;
   } catch (error) {
+    console.log("❌ Invalid token");
     localStorage.removeItem("token");
     return <Navigate to="/" />;
   }

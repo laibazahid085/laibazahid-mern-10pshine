@@ -39,7 +39,6 @@ const NoteEditor = ({ selectedNote, onSave, onDelete }) => {
     if (charCount <= maxContentChars) {
       setContent(value);
     } else {
-      toast.warning(`Character limit of ${maxContentChars} reached.`);
       const trimmedText = plainText.trim().slice(0, maxContentChars);
       editor.setText(trimmedText + " ");
       setContent(editor.root.innerHTML);
