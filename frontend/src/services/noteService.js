@@ -1,44 +1,41 @@
+// src/services/noteService.js
+
 import axios from "axios";
 
-const API_URL = "http://localhost:5000/api/notes"; // Update if using different port
+// ✅ Create a reusable Axios instance
+const API = axios.create({
+  baseURL: "http://localhost:5000/api", // Adjust if backend URL changes
+});
 
-// Get token from localStorage
-const getToken = () => {
-  return localStorage.getItem("token");
-};
+// ✅ Attach token automatically to every request using interceptor
+API.interceptors.request.use((req) => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    req.headers.Authorization = `Bearer ${token}`;
+  }
+  return req;
+});
 
-// Get all notes
+// ✅ Get all notes
 export const getNotes = async () => {
-  const token = getToken();
-  const response = await axios.get(API_URL, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+  const response = await API.get("/notes");
   return response.data;
 };
 
-// Create a new note
+// ✅ Create a new note
 export const createNote = async (noteData) => {
-  const token = getToken();
-  const response = await axios.post(API_URL, noteData, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+  const response = await API.post("/notes", noteData);
   return response.data;
 };
 
-// Update existing note
+// ✅ Update an existing note
 export const updateNote = async (noteId, noteData) => {
-  const token = getToken();
-  const response = await axios.put(`${API_URL}/${noteId}`, noteData, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+  const response = await API.put(`/notes/${noteId}`, noteData);
   return response.data;
 };
 
-// Delete a note
+// ✅ Delete a note
 export const deleteNote = async (noteId) => {
-  const token = getToken();
-  const response = await axios.delete(`${API_URL}/${noteId}`, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+  const response = await API.delete(`/notes/${noteId}`);
   return response.data;
 };

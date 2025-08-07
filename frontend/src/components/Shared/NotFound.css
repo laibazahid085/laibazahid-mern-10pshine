@@ -1,0 +1,37 @@
+.notfound-container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #f8f9fa;
+  color: #343a40;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  text-align: center;
+}
+
+.notfound-container h1 {
+  font-size: 96px;
+  margin: 0;
+  color: #ff4d4f;
+}
+
+.notfound-container p {
+  font-size: 20px;
+  margin: 20px 0;
+}
+
+.notfound-container button {
+  padding: 10px 20px;
+  background-color: #1e2a78;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.notfound-container button:hover {
+  background-color: #3948b4;
+}
