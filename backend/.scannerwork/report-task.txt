@@ -1,0 +1,6 @@
+projectKey=fullstack-notes-app
+serverUrl=http://localhost:9000
+serverVersion=25.8.0.112029
+dashboardUrl=http://localhost:9000/dashboard?id=fullstack-notes-app
+ceTaskId=da666c55-a233-49c7-84a5-1c62aa1e4e18
+ceTaskUrl=http://localhost:9000/api/ce/task?id=da666c55-a233-49c7-84a5-1c62aa1e4e18

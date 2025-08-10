@@ -1,18 +1,18 @@
 import { render, screen, waitFor, fireEvent } from "@testing-library/react";
-import Profile from "../pages/Profile"; // Adjust path if needed
+import Profile from "../components/pages/Profile";
 import axios from "axios";
 import { BrowserRouter } from "react-router-dom";
 
-// Mock axios
-jest.mock("axios");
+// ✅ Use vi.mock for ESM compatibility (or use jest.mock if not using vi)
+vi.mock("axios");
 
-// Mock localStorage
+// ✅ Mock localStorage
 beforeEach(() => {
   localStorage.setItem("token", "dummy_token");
 });
 
 afterEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
   localStorage.clear();
 });
 
@@ -49,7 +49,7 @@ describe("Profile Component", () => {
   });
 
   test("shows alert and redirects on fetch failure", async () => {
-    window.alert = jest.fn();
+    window.alert = vi.fn();
     delete window.location;
     window.location = { href: "" };
 
@@ -69,7 +69,7 @@ describe("Profile Component", () => {
     });
   });
 
-  test("logout removes token and redirects", () => {
+  test("logout removes token and redirects", async () => {
     delete window.location;
     window.location = { href: "" };
 
@@ -87,14 +87,12 @@ describe("Profile Component", () => {
         <Profile />
       </BrowserRouter>
     );
-//work
-    waitFor(async () => {
-      await screen.findByText(/test user/i);
-      const logoutBtn = screen.getByRole("button", { name: /logout/i });
-      fireEvent.click(logoutBtn);
 
-      expect(localStorage.getItem("token")).toBe(null);
-      expect(window.location.href).toBe("/login");
-    });
+    // ✅ Wait for the profile to load before interacting
+    const logoutBtn = await screen.findByRole("button", { name: /logout/i });
+    fireEvent.click(logoutBtn);
+
+    expect(localStorage.getItem("token")).toBe(null);
+    expect(window.location.href).toBe("/login");
   });
 });

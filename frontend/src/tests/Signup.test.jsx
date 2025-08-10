@@ -1,18 +1,27 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
-import Signup from "../pages/Auth/Signup"; // Path as per your structure
+import Signup from "../pages/Auth/Signup";
+
+// ✅ Mock react-toastify
+vi.mock("react-toastify", async () => {
+  const actual = await vi.importActual("react-toastify");
+  return {
+    ...actual,
+    toast: {
+      success: vi.fn(),
+    },
+  };
+});
+
+// ✅ Mock authService (ESM-friendly)
+vi.mock("../../services/authService", async () => {
+  return {
+    signupUser: vi.fn(),
+  };
+});
+
+// ✅ Import the mocked module after mocking it
 import * as authService from "../../services/authService";
-
-// 🧪 Mocks
-jest.mock("../../services/authService", () => ({
-  signupUser: jest.fn(),
-}));
-
-jest.mock("react-toastify", () => ({
-  toast: {
-    success: jest.fn(),
-  },
-}));
 
 describe("Signup Component", () => {
   const setup = () => {
@@ -30,27 +39,31 @@ describe("Signup Component", () => {
     expect(screen.getByPlaceholderText(/name/i)).toBeInTheDocument();
     expect(screen.getByPlaceholderText(/email/i)).toBeInTheDocument();
     expect(screen.getByPlaceholderText(/password/i)).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /signup/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /signup/i })
+    ).toBeInTheDocument();
   });
 
   test("displays error for weak password", async () => {
     setup();
 
     fireEvent.change(screen.getByPlaceholderText(/name/i), {
-      target: { name: "name", value: "Weak Tester" },
+      target: { value: "Weak Tester" },
     });
     fireEvent.change(screen.getByPlaceholderText(/email/i), {
-      target: { name: "email", value: "weak@test.com" },
+      target: { value: "weak@test.com" },
     });
     fireEvent.change(screen.getByPlaceholderText(/password/i), {
-      target: { name: "password", value: "123" }, // Weak password
+      target: { value: "123" }, // Weak password
     });
 
     fireEvent.click(screen.getByRole("button", { name: /signup/i }));
 
-    const errorMsg = await screen.findByText(/password must be at least 8 characters/i);
+    const errorMsg = await screen.findByText(
+      /password must be at least 8 characters/i
+    );
     expect(errorMsg).toBeInTheDocument();
-    expect(authService.signupUser).not.toHaveBeenCalled(); // ❌ Should not call API
+    expect(authService.signupUser).not.toHaveBeenCalled();
   });
 
   test("calls signupUser and shows toast on successful signup", async () => {
@@ -59,13 +72,13 @@ describe("Signup Component", () => {
     setup();
 
     fireEvent.change(screen.getByPlaceholderText(/name/i), {
-      target: { name: "name", value: "Test User" },
+      target: { value: "Test User" },
     });
     fireEvent.change(screen.getByPlaceholderText(/email/i), {
-      target: { name: "email", value: "test@example.com" },
+      target: { value: "test@example.com" },
     });
     fireEvent.change(screen.getByPlaceholderText(/password/i), {
-      target: { name: "password", value: "StrongPass1!" }, // Strong password
+      target: { value: "StrongPass1!" },
     });
 
     fireEvent.click(screen.getByRole("button", { name: /signup/i }));
@@ -94,13 +107,13 @@ describe("Signup Component", () => {
     setup();
 
     fireEvent.change(screen.getByPlaceholderText(/name/i), {
-      target: { name: "name", value: "Test User" },
+      target: { value: "Test User" },
     });
     fireEvent.change(screen.getByPlaceholderText(/email/i), {
-      target: { name: "email", value: "test@example.com" },
+      target: { value: "test@example.com" },
     });
     fireEvent.change(screen.getByPlaceholderText(/password/i), {
-      target: { name: "password", value: "StrongPass1!" },
+      target: { value: "StrongPass1!" },
     });
 
     fireEvent.click(screen.getByRole("button", { name: /signup/i }));

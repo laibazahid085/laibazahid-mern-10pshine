@@ -153,6 +153,7 @@ const Dashboard = () => {
               selectedNote={selectedNote}
               onSave={handleSave}
               onDelete={handleDelete}
+              notes={notes}
             />
           )}
         </div>

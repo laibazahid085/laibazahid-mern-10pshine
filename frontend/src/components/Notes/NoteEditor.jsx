@@ -7,9 +7,10 @@ import "react-toastify/dist/ReactToastify.css";
 import "react-confirm-alert/src/react-confirm-alert.css";
 import "./Notes.css";
 
-const NoteEditor = ({ selectedNote, onSave, onDelete }) => {
+const NoteEditor = ({ selectedNote, onSave, onDelete, notes }) => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [titleError, setTitleError] = useState("");
   const [loading, setLoading] = useState(false);
   const quillRef = useRef(null);
 
@@ -20,9 +21,11 @@ const NoteEditor = ({ selectedNote, onSave, onDelete }) => {
     if (selectedNote) {
       setTitle(selectedNote.title);
       setContent(selectedNote.content);
+      setTitleError("");
     } else {
       setTitle("");
       setContent("");
+      setTitleError("");
     }
   }, [selectedNote]);
 
@@ -45,9 +48,27 @@ const NoteEditor = ({ selectedNote, onSave, onDelete }) => {
     }
   };
 
+  const handleTitleChange = (e) => {
+    const newTitle = e.target.value;
+    setTitle(newTitle);
+
+    const isDuplicate = notes.some(
+      (note) =>
+        note.title.trim().toLowerCase() === newTitle.trim().toLowerCase() &&
+        (!selectedNote || note._id !== selectedNote._id)
+    );
+
+    if (!newTitle.trim()) {
+      setTitleError("Title is required");
+    } else if (isDuplicate) {
+      setTitleError("This title is already used");
+    } else {
+      setTitleError("");
+    }
+  };
+
   const handleSave = async () => {
-    if (!title.trim() || !content.trim()) {
-      toast.error("Title and content are required!");
+    if (!title.trim() || !content.trim() || titleError) {
       return;
     }
 
@@ -57,6 +78,7 @@ const NoteEditor = ({ selectedNote, onSave, onDelete }) => {
       toast.success(selectedNote ? "Note updated!" : "Note created!");
       setTitle("");
       setContent("");
+      setTitleError("");
     } catch {
       toast.error("Failed to save note.");
     } finally {
@@ -67,6 +89,7 @@ const NoteEditor = ({ selectedNote, onSave, onDelete }) => {
   const handleClear = () => {
     setTitle("");
     setContent("");
+    setTitleError("");
   };
 
   const handleDelete = () => {
@@ -85,6 +108,7 @@ const NoteEditor = ({ selectedNote, onSave, onDelete }) => {
               toast.success("Note deleted!");
               setTitle("");
               setContent("");
+              setTitleError("");
             } catch {
               toast.error("Failed to delete note.");
             } finally {
@@ -104,11 +128,29 @@ const NoteEditor = ({ selectedNote, onSave, onDelete }) => {
         type="text"
         placeholder="Note title"
         value={title}
-        onChange={(e) => setTitle(e.target.value)}
+        onChange={handleTitleChange}
         maxLength={maxTitleChars}
         disabled={loading}
       />
-      <p className="char-count">{title.length} / {maxTitleChars}</p>
+
+      {/* ✅ Title error + character count in one line */}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginTop: "4px",
+          marginBottom: "8px",
+        }}
+      >
+        {titleError ? (
+          <span style={{ color: "red", fontSize: "0.85rem" }}>{titleError}</span>
+        ) : (
+          <span></span>
+        )}
+
+        <span className="char-count">{title.length} / {maxTitleChars}</span>
+      </div>
 
       <ReactQuill
         ref={quillRef}
@@ -120,8 +162,13 @@ const NoteEditor = ({ selectedNote, onSave, onDelete }) => {
         placeholder="Write your note here..."
       />
       <p className="char-count">{getCharCount()} / {maxContentChars}</p>
+
       <div className="editor-buttons">
-        <button className="primary-btn" onClick={handleSave} disabled={loading}>
+        <button
+          className="primary-btn"
+          onClick={handleSave}
+          disabled={loading || !!titleError}
+        >
           {selectedNote ? "Update" : "Save"}
         </button>
 
