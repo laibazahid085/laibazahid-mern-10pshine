@@ -1,5 +1,5 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import Navbar from "../components/Navbar"; // Adjust path as needed
+import Navbar from "../components/Shared/Navbar";
 import { BrowserRouter } from "react-router-dom";
 
 // Mocks for props

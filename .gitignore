@@ -20,3 +20,6 @@ backend/dist/
 
 # VS Code
 .vscode/
+.scannerwork/
+.nyc_output/
+coverage/

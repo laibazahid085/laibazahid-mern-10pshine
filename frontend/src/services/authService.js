@@ -2,12 +2,21 @@
 
 import axios from "axios";
 
-// ✅ Create an Axios instance for auth-related requests
+// ✅ Create an Axios instance
 const API = axios.create({
-  baseURL: "http://localhost:5000/api/users", // Make sure this matches your backend
+  baseURL: "http://localhost:5000/api/users", // 🔁 Make sure this matches .env in production
 });
 
-// ✅ Login user → POST /api/users/login
+// ✅ Add Authorization token to every request (if available)
+API.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
+// ✅ Login user → POST /login
 export const loginUser = async (credentials) => {
   try {
     const res = await API.post("/login", credentials);
@@ -18,11 +27,11 @@ export const loginUser = async (credentials) => {
 
     return res.data;
   } catch (error) {
-    throw error.response?.data || error; // return meaningful error to frontend
+    throw error.response?.data || error;
   }
 };
 
-// ✅ Signup user → POST /api/users/signup
+// ✅ Signup user → POST /signup
 export const signupUser = async (userData) => {
   try {
     const res = await API.post("/signup", userData);
@@ -37,21 +46,10 @@ export const signupUser = async (userData) => {
   }
 };
 
-// ✅ Get user profile → GET /api/users/profile
+// ✅ Get profile → GET /profile
 export const getProfile = async () => {
-  const token = localStorage.getItem("token");
-
-  if (!token) {
-    throw new Error("No token found. Please login again.");
-  }
-
   try {
-    const res = await API.get("/profile", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
+    const res = await API.get("/profile");
     return res.data;
   } catch (error) {
     throw error.response?.data || error;

@@ -1,44 +1,43 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import NoteEditor from "../components/NoteEditor"; // Adjust path
+import NoteEditor from "../components/Notes/NoteEditor";
 import * as toastify from "react-toastify";
 import * as confirm from "react-confirm-alert";
-import ReactQuill from "react-quill";
 
-// Mock ReactQuill to behave like a simple textarea
-jest.mock("react-quill", () => {
-  return ({ value, onChange }) => (
+// Mock ReactQuill as a textarea
+vi.mock("react-quill", () => ({
+  default: ({ value, onChange }) => (
     <textarea
       data-testid="quill-editor"
       value={value}
       onChange={(e) => onChange(e.target.value)}
     />
-  );
-});
+  ),
+}));
 
 // Mock toast
-jest.mock("react-toastify", () => ({
+vi.mock("react-toastify", () => ({
   toast: {
-    success: jest.fn(),
-    error: jest.fn(),
+    success: vi.fn(),
+    error: vi.fn(),
   },
 }));
 
 // Mock confirmAlert
-jest.mock("react-confirm-alert", () => ({
-  confirmAlert: jest.fn(),
+vi.mock("react-confirm-alert", () => ({
+  confirmAlert: vi.fn(),
 }));
 
 describe("NoteEditor Component", () => {
-  const mockOnSave = jest.fn(() => Promise.resolve());
-  const mockOnDelete = jest.fn(() => Promise.resolve());
+  const mockOnSave = vi.fn(() => Promise.resolve());
+  const mockOnDelete = vi.fn(() => Promise.resolve());
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   test("renders inputs and buttons", () => {
     render(<NoteEditor onSave={mockOnSave} onDelete={mockOnDelete} />);
-    
+
     expect(screen.getByPlaceholderText(/note title/i)).toBeInTheDocument();
     expect(screen.getByTestId("quill-editor")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /save/i })).toBeInTheDocument();
