@@ -12,15 +12,18 @@ dotenv.config();
 
 const app = express();
 
-// ✅ Allow specific origins (CORS fix)
+// ✅ CORS config
 const allowedOrigins = [
-  "http://localhost:5173", // frontend dev URL
-  ];
+  "http://localhost:5173", // frontend dev
+  "https://laibazahid-mem-1opshine-production.up.railway.app", // backend hosted domain
+];
 
 app.use(
   cors({
     origin: allowedOrigins,
-    credentials: true, // allow cookies, auth headers
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
