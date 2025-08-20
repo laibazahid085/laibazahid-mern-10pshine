@@ -4,7 +4,7 @@ import axios from "axios";
 
 // ✅ Create an Axios instance
 const API = axios.create({
-  baseURL: "http://localhost:5000/api/users", // 🔁 Make sure this matches .env in production
+  baseURL: import.meta.env.VITE_API_URL,// 🔁 Make sure this matches .env in production
 });
 
 // ✅ Add Authorization token to every request (if available)
