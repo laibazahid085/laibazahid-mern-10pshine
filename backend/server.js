@@ -12,23 +12,35 @@ dotenv.config();
 
 const app = express();
 
+// ✅ Allow specific origins (CORS fix)
+const allowedOrigins = [
+  "http://localhost:5173", // frontend dev URL
+  ];
+
+app.use(
+  cors({
+    origin: allowedOrigins,
+    credentials: true, // allow cookies, auth headers
+  })
+);
+
 // 💡 Pino middleware
 app.use(pinoHttp({ logger }));
 
-app.use(cors());
+// ✅ Body parser
 app.use(express.json());
 
-// Routes
+// ✅ Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/notes", noteRoutes);
 app.use("/api/users", userRoutes);
 
-// Server & DB connect
+// ✅ Server & DB connect
 const PORT = process.env.PORT || 5000;
 
 if (require.main === module) {
   connectDB().then(() => {
-    app.listen(PORT, '0.0.0.0', () =>
+    app.listen(PORT, "0.0.0.0", () =>
       logger.info(`🚀 Server running on http://localhost:${PORT}`)
     );
   });
