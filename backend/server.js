@@ -12,23 +12,38 @@ dotenv.config();
 
 const app = express();
 
+// ✅ CORS config
+const allowedOrigins = [
+  "http://localhost:5173", // frontend dev
+  "https://laibazahid-mem-1opshine-production.up.railway.app", // backend hosted domain
+];
+
+app.use(
+  cors({
+    origin: allowedOrigins,
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
+
 // 💡 Pino middleware
 app.use(pinoHttp({ logger }));
 
-app.use(cors());
+// ✅ Body parser
 app.use(express.json());
 
-// Routes
+// ✅ Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/notes", noteRoutes);
 app.use("/api/users", userRoutes);
 
-// Server & DB connect
+// ✅ Server & DB connect
 const PORT = process.env.PORT || 5000;
 
 if (require.main === module) {
   connectDB().then(() => {
-    app.listen(PORT, '0.0.0.0', () =>
+    app.listen(PORT, "0.0.0.0", () =>
       logger.info(`🚀 Server running on http://localhost:${PORT}`)
     );
   });
