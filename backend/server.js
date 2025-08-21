@@ -3,42 +3,47 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const connectDB = require("./config/db");
 const authRoutes = require("./routes/authRoutes");
-const noteRoutes = require("./routes/noteRoutes");
 const userRoutes = require("./routes/userRoutes");
+const noteRoutes = require("./routes/noteRoutes");
 const pinoHttp = require("pino-http");
-const logger = require("./utils/logger"); // custom logger
+const logger = require("./utils/logger");
 
 dotenv.config();
 
 const app = express();
 
-// ✅ CORS config
+// ✅ CORS Setup
 const allowedOrigins = [
-  "http://localhost:5173", // frontend dev
-  "https://laibazahid-mem-1opshine-production.up.railway.app", // backend hosted domain
+  "http://localhost:5173",
+  "https://laibazahid-mern-10pshine.vercel.app",
 ];
 
 app.use(
   cors({
-    origin: allowedOrigins,
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
-// 💡 Pino middleware
 app.use(pinoHttp({ logger }));
-
-// ✅ Body parser
 app.use(express.json());
 
 // ✅ Routes
-app.use("/api/auth", authRoutes);
-app.use("/api/notes", noteRoutes);
-app.use("/api/users", userRoutes);
+app.use("/api/auth", authRoutes); // Login & Signup (older)
+app.use("/api/users", userRoutes); // Newer Login & Signup + Profile
+app.use("/api/notes", noteRoutes); // Notes
 
-// ✅ Server & DB connect
+// ✅ Production default route
+app.get("/", (req, res) => {
+  res.send("API is running...");
+});
+
 const PORT = process.env.PORT || 5000;
 
 if (require.main === module) {
