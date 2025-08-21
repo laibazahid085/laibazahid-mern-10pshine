@@ -3,8 +3,8 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const connectDB = require("./config/db");
 const authRoutes = require("./routes/authRoutes");
-const noteRoutes = require("./routes/noteRoutes");
 const userRoutes = require("./routes/userRoutes");
+const noteRoutes = require("./routes/noteRoutes");
 const pinoHttp = require("pino-http");
 const logger = require("./utils/logger");
 
@@ -12,10 +12,10 @@ dotenv.config();
 
 const app = express();
 
-// ✅ Allow both local + deployed frontend (CORS)
+// ✅ CORS Setup
 const allowedOrigins = [
-  "http://localhost:5173", // local dev
-  "https://laibazahid-mern-10pshine.vercel.app", // deployed frontend
+  "http://localhost:5173",
+  "https://laibazahid-mern-10pshine.vercel.app",
 ];
 
 app.use(
@@ -28,21 +28,22 @@ app.use(
       }
     },
     credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
-// ✅ Middleware
 app.use(pinoHttp({ logger }));
 app.use(express.json());
 
 // ✅ Routes
-app.use("/api/auth", authRoutes);
-app.use("/api/notes", noteRoutes);
-app.use("/api/users", userRoutes);
+app.use("/api/auth", authRoutes); // Login & Signup (older)
+app.use("/api/users", userRoutes); // Newer Login & Signup + Profile
+app.use("/api/notes", noteRoutes); // Notes
 
-// ✅ Server + DB Connection
+// ✅ Production default route
+app.get("/", (req, res) => {
+  res.send("API is running...");
+});
+
 const PORT = process.env.PORT || 5000;
 
 if (require.main === module) {
