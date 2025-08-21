@@ -12,7 +12,7 @@ dotenv.config();
 
 const app = express();
 
-// ✅ CORS Setup
+// ✅ CORS setup
 const allowedOrigins = [
   "http://localhost:5173",
   "https://laibazahid-mern-10pshine.vercel.app",
@@ -35,22 +35,23 @@ app.use(pinoHttp({ logger }));
 app.use(express.json());
 
 // ✅ Routes
-app.use("/api/auth", authRoutes); // Login & Signup (older)
-app.use("/api/users", userRoutes); // Newer Login & Signup + Profile
-app.use("/api/notes", noteRoutes); // Notes
+app.use("/api/auth", authRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api/notes", noteRoutes);
 
-// ✅ Production default route
+// ✅ Default route to test root
 app.get("/", (req, res) => {
   res.send("API is running...");
 });
 
 const PORT = process.env.PORT || 5000;
 
+// ✅ Server startup
 if (require.main === module) {
   connectDB().then(() => {
-    app.listen(PORT, "0.0.0.0", () =>
-      logger.info(`🚀 Server running on http://localhost:${PORT}`)
-    );
+    app.listen(PORT, "0.0.0.0", () => {
+      logger.info(`🚀 Server running on port ${PORT}`);
+    });
   });
 } else {
   module.exports = app;
