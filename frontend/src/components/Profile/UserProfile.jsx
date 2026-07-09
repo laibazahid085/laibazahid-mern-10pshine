@@ -5,6 +5,8 @@ import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
 import "./Profile.css";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 const Profile = () => {
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
@@ -13,18 +15,18 @@ const Profile = () => {
     try {
       const token = localStorage.getItem("token");
 
-      const res = await axios.get("http://localhost:5000/api/users/profile", {
+      const res = await axios.get(`${API_URL}/users/profile`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
 
-      // ✅ Fix: no need to access res.data.user if res.data itself is the user
       setUser(res.data);
     } catch (err) {
       console.error("Profile fetch failed", err);
       alert("Could not load profile. Please login again.");
-      window.location.href = "/";
+      localStorage.removeItem("token");
+      navigate("/");
     }
   };
 
@@ -37,12 +39,11 @@ const Profile = () => {
           label: "Yes",
           onClick: () => {
             localStorage.removeItem("token");
-            window.location.href = "/";
+            navigate("/");
           },
         },
         {
           label: "No",
-          onClick: () => {},
         },
       ],
     });
@@ -57,15 +58,19 @@ const Profile = () => {
       {user ? (
         <div className="profile-card">
           <h2>👤 User Profile</h2>
+
           <p>
             <strong>Name:</strong> {user.name}
           </p>
+
           <p>
             <strong>Email:</strong> {user.email}
           </p>
+
           <button onClick={handleLogout} className="primary-btn">
             🚪 Logout
           </button>
+
           <button
             onClick={() => navigate("/dashboard")}
             className="primary-btn"
