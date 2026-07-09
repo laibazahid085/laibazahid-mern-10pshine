@@ -4,7 +4,7 @@ import axios from "axios";
 
 // ✅ Create a reusable Axios instance
 const API = axios.create({
-  baseURL: "http://localhost:5000/api", // Adjust if backend URL changes
+  baseURL: import.meta.env.VITE_API_URL,
 });
 
 // ✅ Attach token automatically to every request using interceptor
