@@ -12,23 +12,14 @@ dotenv.config();
 
 const app = express();
 
-const allowedOrigins = [
-  "http://localhost:5173",
-  "https://laibazahid-mern-10pshine.vercel.app",
-];
-
+// ✅ CORS Configuration
 app.use(
   cors({
-    origin: function (origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
+    origin: true, // Automatically allows requests from your frontend origin
     credentials: true,
   })
 );
+
 app.use(pinoHttp({ logger }));
 app.use(express.json());
 
@@ -37,14 +28,14 @@ app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/notes", noteRoutes);
 
-// ✅ Default route to test root
+// ✅ Default route
 app.get("/", (req, res) => {
   res.send("API is running...");
 });
 
 const PORT = process.env.PORT || 5000;
 
-// ✅ Server startup
+// ✅ Start Server
 if (require.main === module) {
   connectDB().then(() => {
     app.listen(PORT, "0.0.0.0", () => {
